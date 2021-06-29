@@ -2,17 +2,17 @@ import {useRouter} from 'next/router';
 import {useState, useRef, useContext, useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import AuthContext from '../../store/auth-context';
-
-const debug: boolean = false;
+import AppModal from '../UI/AppModal';
 
 export default function AuthForm() {
   const router = useRouter();
   const loc = router.locale;
   const home = '/' + loc;
   const auth = home + '/auth';
-  console.log(router.query);
+  const getPassword = home + '/forgotpassword';
 
   const authContext = useContext(AuthContext);
+  const [emailSent, setEmailSent] = useState<boolean>(false);
 
   useEffect(() => {
     const signIn = router.query.singIn;
@@ -44,10 +44,10 @@ export default function AuthForm() {
       setEnteredEmail(email);
     }
   
-  }, [router.query]);
+  }, []);
 
   if (authContext.isLoggedIn) {
-    // router.push(home);
+    router.push(home);
   }
 
   const {formatMessage: fmt} = useIntl();
@@ -58,9 +58,9 @@ export default function AuthForm() {
   const [emailIsValid, setEmailIsValid] = useState<boolean>(false);
   const [emailBlur, setEmailBlur] = useState<boolean>(false);
 
-  const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
 
   //===================================================
   //   V A L I D A T I O N
@@ -70,7 +70,6 @@ export default function AuthForm() {
   // Validate eMail
   //
   const emailChangeHandler = (event: any) => {
-    setError(false);
     setEmailIsValid(
       event.target.value.includes('@') && event.target.value.trim().length > 5
     );
@@ -98,16 +97,11 @@ export default function AuthForm() {
       setEmailIsValid(false);
     }
     setEmailBlur(true);
-    if (debug) {
-      console.log(
-        'entered value ' + enteredEmail + ' ' + emailIsValid + ' ' + emailBlur
-      );
-    }
   };
 
   const closeErrorHandler = () => {
-    console.log('CLOSE ERROR HANDLER');
-    router.push("/auth");
+    setEmailSent(false);
+    router.push({ pathname: auth, query: { singIn: true } })
   };
 
 
@@ -115,12 +109,10 @@ export default function AuthForm() {
   //   F O R G O T   P A S S W O R D
   //===================================================
   const processForgotPasswordHandler = async (event: any) => {
-    if (debug) {
-      console.log('PROCESS FORGOT HANDLER');
-      console.log(enteredEmail);
-    }
+    event.preventDefault();
 
     let url = '/api/forgotPassword';
+    setEmailSent(true);
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -133,22 +125,11 @@ export default function AuthForm() {
         },
       });
       const data = await response.json();
-      if (debug) {
-        console.log('DATA ===> ');
-        console.log(data);
-      }
-      if (data.statusCode !== 200 && data.statusCode !== 201) {
-        throw new Error(data.message);
-      }
-      if (debug) {
-        console.log('CLOSE MODAL');
-      }
-      closeErrorHandler();
+      router.push(getPassword);
+
     } catch (error) {
       console.log(error);
-      {
-        closeErrorHandler();
-      }
+      router.push(getPassword);
     }
   };
   const inputClass =
@@ -172,8 +153,8 @@ export default function AuthForm() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form
             className="space-y-6"
-            action="#"
-            method="POST"
+            // action="#"
+            // method="POST"
             onSubmit={processForgotPasswordHandler}
           >
             <div>
@@ -211,6 +192,15 @@ export default function AuthForm() {
               </button>
             </div>
           </form>
+
+          {emailSent && (
+            <AppModal
+              title={fmt({id: 'resetPasswordSent'})}
+              buttonText={fmt({id: 'gobackToSignin'})}
+              message={fmt({id: 'forgotPasswordSent'})+ enteredEmail + fmt({id: 'forgotPasswordSent2'})}
+              closeModal={closeErrorHandler}
+            />
+          )}
         </div>
       </div>
     </div>

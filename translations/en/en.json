@@ -33,7 +33,7 @@
   "E-CONFIRM-EMAIL-FAILED": "Unable to confirm Email.",
   "resendEmailVerification": "Resend verification email.",
   "forgotPassword": "Forgot your password?",
-  "sendForgotPassword": "Send forgot password email",
+  "sendForgotPassword": "Send reset password email",
   "E-PASSWORD-RESET": "Password reset failed.",
   "displayName": "Name",
   "enterName": "Enter name",
@@ -45,5 +45,8 @@
   "rememberMe": "Remember me",
   "accountCreated": "Account created",
   "gobackToSignup": "Go back to sign up",
-  "gobackToSignin": "Go back to sign in"
+  "gobackToSignin": "Go back to sign in",
+  "forgotPasswordSent": "An email to reset you password was sent to ",
+  "forgotPasswordSent2": ", provided you signed up using this email address.",
+  "resetPasswordSent": "Reset password email sent."
 }
