@@ -1,5 +1,10 @@
 module.exports = {
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  purge: {
+    content: [
+      './src/**/*.js',
+      './src/**/*.11ty.js',
+    ],
+  },
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
@@ -7,5 +12,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: ["tailwindcss"],
 }
