@@ -1,12 +1,14 @@
 import {useRouter} from 'next/router';
 import {useState, useRef, useContext, useEffect} from 'react';
 import {useIntl} from 'react-intl';
+import Link from 'next/link';
+
 import AuthContext from '../../store/auth-context';
 import {LoginUser} from '../../store/auth-context';
 import {UserData} from '../../models/UserData';
 import AppModal from '../UI/AppModal';
 import ErrorModal from '../UI/ErrorModal';
-import Link from 'next/link';
+import Loading from '../UI/Loading';
 
 const debug: boolean = false;
 
@@ -217,6 +219,12 @@ export default function AuthForm() {
     return;
   };
 
+  if (isLoading) {
+    return (
+      <Loading />
+    );
+  } 
+
   //===================================================
   //   P R O C E S S    F O R M
   //===================================================
@@ -231,7 +239,7 @@ export default function AuthForm() {
       return;
     }
 
-    // setIsLoading(true);
+    setIsLoading(true);
     let url;
     let requestType: string = '';
     if (isLogin) {
@@ -257,6 +265,7 @@ export default function AuthForm() {
         },
       });
       const data = await response.json();
+      setIsLoading(false);
       if (debug) {
         console.log('DATA ===> ');
         console.log(data);
@@ -355,9 +364,11 @@ export default function AuthForm() {
       setEnteredEmail('');
       setEnteredPassword('');
       router.push(auth+"?singIn=false");
-
     }
     setUserRegistered(false);
+    if ( error  && isLogin) {
+      redirectPath = auth+"?singIn=true";
+    }
     setError(false);
     setForgotPassword(false);
     setErrorMessage('');
@@ -377,6 +388,7 @@ export default function AuthForm() {
       console.log(token);
     }
 
+    setIsLoading(true);
     let url = '/api/resendEmail';
     let requestType = 'VERIFY_EMAIL';
     try {
@@ -392,6 +404,7 @@ export default function AuthForm() {
         },
       });
       const data = await response.json();
+      setIsLoading(false);
       if (debug) {
         console.log('DATA ===> ');
         console.log(data);

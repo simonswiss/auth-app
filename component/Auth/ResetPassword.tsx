@@ -6,7 +6,7 @@ import AppModal from '../UI/AppModal';
 import Loading from '../UI/Loading';
 import ErrorModal from '../UI/ErrorModal';
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 export default function ResetPasswordForm() {
   const router = useRouter();
@@ -28,11 +28,9 @@ export default function ResetPasswordForm() {
 
   const authContext = useContext(AuthContext);
   
-  const [passwordReset, setPasswordReset] = useState<boolean>(false);
+  // const [passwordReset, setPasswordReset] = useState<boolean>(false);
   const [passwordResetDone, setPasswordResetDone] = useState<boolean>(false);
   const [passwordResetError, setPasswordResetError] = useState<boolean>(false);
-
-
 
   useEffect(() => {
     let oobCode : string | any;
@@ -49,13 +47,6 @@ export default function ResetPasswordForm() {
       console.log(authContext);
     }
   
-  
-    const signIn = router.query.singIn;
-    if (signIn && signIn === 'true') {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
     let app_id: any = router.query.app_id;
     if (app_id) {
       authContext.appId = app_id;
@@ -95,11 +86,9 @@ export default function ResetPasswordForm() {
   const [passwordBlur2, setPasswordBlur2] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(false);
-  const [formIsValid, setFormIsValid] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
+  // const [error, setError] = useState<boolean>(false);
   
-  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   //===================================================
   //   V A L I D A T I O N
@@ -109,7 +98,7 @@ export default function ResetPasswordForm() {
   // Validate Password
   //
   const passwordChangeHandler = (event: any) => {
-    setError(false);
+    // setError(false);
     if (event.target.value.trim().length > 7) {
       setPasswordIsValid(true);
     }
@@ -120,7 +109,7 @@ export default function ResetPasswordForm() {
   // Validate Confirm Password
   //
   const passwordChangeHandler2 = (event: any) => {
-    setError(false);
+    // setError(false);
     if (event.target.value.trim().length > 7) {
       setPasswordIsValid2(true);
     }
@@ -157,14 +146,16 @@ export default function ResetPasswordForm() {
 
 
   const closeErrorHandler = () => {
-    setPasswordReset(false);
+    // setPasswordReset(false);
+    setPasswordResetDone(false);
+    setPasswordResetError(false);
     router.push({ pathname: auth, query: { singIn: true } })
   };
 
   const closeModalHandler = () => {
     setPasswordResetDone(false);
     setPasswordResetError(false);
-    setFormIsValid(false);
+    setPasswordsMatch(true);
   };
 
 
@@ -181,11 +172,6 @@ export default function ResetPasswordForm() {
   const processResetPasswordHandler = async (event: any) => {
     event.preventDefault();
 
-    if ( passwordIsValid && passwordIsValid2  && passwordBlur && passwordBlur2 ) {
-      setFormIsValid(true);
-    } else {
-      setFormIsValid(false)
-    }
     if ( enteredPassword !== enteredPassword2 ) {
       setPasswordsMatch(false)
       return;
@@ -195,8 +181,8 @@ export default function ResetPasswordForm() {
     setIsLoading(true);
     setPasswordResetDone(false);
     setPasswordResetError(false);
-    setPasswordReset(true);
-    setError(false);
+    // setPasswordReset(true);
+    // setError(false);
     let url = '/api/resetPassword';
     try {
       console.log("entered password "+enteredPassword)
@@ -225,11 +211,9 @@ export default function ResetPasswordForm() {
         }
       }
       setPasswordResetDone(true);
-      console.log("passwordReset "+ passwordReset + " error "+error+ " isloading "+isLoading);
-      //return;
     } catch (error) {
       console.log(error);
-      setError(true);
+      // setError(true);
       setPasswordResetError(true);
     }
   };
@@ -319,7 +303,7 @@ export default function ResetPasswordForm() {
             </div>
 
           </form>
-          {formIsValid === true && passwordsMatch === false && passwordReset === false && (
+          {passwordsMatch === false && passwordIsValid === true && passwordIsValid2 === true && (
             <ErrorModal
             title={fmt({id: 'passwordMatchErrorTitle'})}
             buttonText={fmt({id: 'reenterPassword'})}
