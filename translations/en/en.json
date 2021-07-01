@@ -52,5 +52,16 @@
   "verifyEmailErrorTitle": "Try verifying your email again",
   "verifyEmailErrorMessage": "Your request to verify your email has expired or the link has already been used.",
   "verifyEmailTitle": "Your email has been verified",
-  "verifyEmailMessage": "You can now sign in with your new account."
+  "verifyEmailMessage": "You can now sign in with your new account.",
+  "resetPasswordErrorTitle": "Try resetting your password again",
+  "resetPasswordErrorMessage": "Your request to reset your password has expired or the link has already been used.",
+  "resetPasswordTitle": "Reset your password",
+  "saveNewPassword": "Save your new password",
+  "passwordChanged": "Password changed",
+  "passwordChangedMessage": "You can now sign in with your new password.",
+  "newPassword": "New password",
+  "confirmPassword": "Confirm password",
+  "passwordMatchErrorTitle": "Passwords do not match",
+  "passwordMatchErrorMessage": "Please make sure that the passwords match.",
+  "reenterPassword": "Go back to reset your password"
 }

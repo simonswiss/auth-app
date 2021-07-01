@@ -3,33 +3,52 @@ import {useState, useRef, useContext, useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import AuthContext from '../../store/auth-context';
 import AppModal from '../UI/AppModal';
+import Loading from '../UI/Loading';
+import ErrorModal from '../UI/ErrorModal';
 
 const debug: boolean = true;
 
 export default function ResetPasswordForm() {
   const router = useRouter();
-  const loc = router.locale;
+  let loc = router.query.lang;
+  if ( !loc ) {
+    loc = router.locale;
+  }
   const home = '/' + loc;
   const auth = home + '/auth';
-  const getPassword = home + '/forgotpassword';
+
+  let oobCode = router.query.oobCode;
+  if ( debug ) {
+    console.log("Reset Password Form 2")
+    console.log("=====================")
+    console.log("oobCodeVar: "+oobCode)
+    console.log("lang: "+loc)
+
+  }
 
   const authContext = useContext(AuthContext);
-  const [emailSent, setEmailSent] = useState<boolean>(false);
+  
+  const [passwordReset, setPasswordReset] = useState<boolean>(false);
+  const [passwordResetDone, setPasswordResetDone] = useState<boolean>(false);
+  const [passwordResetError, setPasswordResetError] = useState<boolean>(false);
+
+
 
   useEffect(() => {
     let oobCode : string | any;
-    let lang : string | any;
-    
-    lang = router.query.lang;
     oobCode = router.query.oobCode
+    if ( oobCode ) {
+      if ( authContext.oobCode === "") {
+        authContext.oobCode = oobCode;
+      }
+    }
     if ( debug ){
       console.log("Reset Password Form")
       console.log("===================")
-      console.log("oobCode: "+oobCode)
-      console.log("lang: "+lang)
-      console.log(router)
+      console.log("oobCodeVar: "+oobCode)
       console.log(authContext);
     }
+  
   
     const signIn = router.query.singIn;
     if (signIn && signIn === 'true') {
@@ -55,10 +74,6 @@ export default function ResetPasswordForm() {
     if (app_name) {
       authContext.appName = app_name;
     }
-    if ( router.query.enteredEmail ) {
-      let email:string = router.query.enteredEmail.toString();
-      setEnteredEmail(email);
-    }  
     if ( debug ) {
       console.log(router)
       console.log(authContext);
@@ -71,31 +86,45 @@ export default function ResetPasswordForm() {
 
   const {formatMessage: fmt} = useIntl();
 
-  const [forgotPassword, setForgotPassword] = useState<boolean>();
+  const [enteredPassword, setEnteredPassword] = useState('');
+  const [passwordIsValid, setPasswordIsValid] = useState<boolean>(false);
+  const [passwordBlur, setPasswordBlur] = useState<boolean>(false);
 
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [emailIsValid, setEmailIsValid] = useState<boolean>(false);
-  const [emailBlur, setEmailBlur] = useState<boolean>(false);
+  const [enteredPassword2, setEnteredPassword2] = useState('');
+  const [passwordIsValid2, setPasswordIsValid2] = useState<boolean>(false);
+  const [passwordBlur2, setPasswordBlur2] = useState<boolean>(false);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [passwordsMatch, setPasswordsMatch] = useState<boolean>(false);
+  const [formIsValid, setFormIsValid] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   //===================================================
   //   V A L I D A T I O N
   //===================================================
 
   //
-  // Validate eMail
+  // Validate Password
   //
-  const emailChangeHandler = (event: any) => {
-    setEmailIsValid(
-      event.target.value.includes('@') && event.target.value.trim().length > 5
-    );
-    if (emailIsValid && emailBlur) {
-      setEmailBlur(false);
+  const passwordChangeHandler = (event: any) => {
+    setError(false);
+    if (event.target.value.trim().length > 7) {
+      setPasswordIsValid(true);
     }
-    setEnteredEmail(event.target.value);
+    setEnteredPassword(event.target.value);
+  };
+
+  //
+  // Validate Confirm Password
+  //
+  const passwordChangeHandler2 = (event: any) => {
+    setError(false);
+    if (event.target.value.trim().length > 7) {
+      setPasswordIsValid2(true);
+    }
+    setEnteredPassword2(event.target.value);
   };
 
   //===================================================
@@ -103,40 +132,79 @@ export default function ResetPasswordForm() {
   //===================================================
 
   //
-  // Validate eMail
+  // Validate password
   //
-  const validateEmailHandler = () => {
-    if (
-      enteredEmail &&
-      enteredEmail.trim().includes('@') &&
-      enteredEmail.trim().length > 5
-    ) {
-      setEmailIsValid(true);
+  const validatePasswordHandler = () => {
+    if (enteredPassword && enteredPassword.trim().length > 7) {
+      setPasswordIsValid(true);
     } else {
-      setEmailIsValid(false);
+      setPasswordIsValid(false);
     }
-    setEmailBlur(true);
+    setPasswordBlur(true);
   };
 
+  //
+  // Validate confirm password
+  //
+  const validatePasswordHandler2 = () => {
+    if (enteredPassword2 && enteredPassword2.trim().length > 7) {
+      setPasswordIsValid2(true);
+    } else {
+      setPasswordIsValid2(false);
+    }
+    setPasswordBlur2(true);
+  };
+
+
   const closeErrorHandler = () => {
-    setEmailSent(false);
+    setPasswordReset(false);
     router.push({ pathname: auth, query: { singIn: true } })
   };
 
+  const closeModalHandler = () => {
+    setPasswordResetDone(false);
+    setPasswordResetError(false);
+    setFormIsValid(false);
+  };
+
+
+  if (isLoading) {
+    return (
+      <Loading />
+    );
+  }    
+
 
   //===================================================
-  //   F O R G O T   P A S S W O R D
+  //   R E S E T   P A S S W O R D
   //===================================================
-  const processForgotPasswordHandler = async (event: any) => {
+  const processResetPasswordHandler = async (event: any) => {
     event.preventDefault();
 
-    let url = '/api/forgotPassword';
-    setEmailSent(true);
+    if ( passwordIsValid && passwordIsValid2  && passwordBlur && passwordBlur2 ) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false)
+    }
+    if ( enteredPassword !== enteredPassword2 ) {
+      setPasswordsMatch(false)
+      return;
+    }
+    setPasswordsMatch(true);
+
+    setIsLoading(true);
+    setPasswordResetDone(false);
+    setPasswordResetError(false);
+    setPasswordReset(true);
+    setError(false);
+    let url = '/api/resetPassword';
     try {
+      console.log("entered password "+enteredPassword)
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-          email: enteredEmail,
+          password: enteredPassword,
+          oobCode: authContext.oobCode,
           requestMethod: 'POST',
         }),
         headers: {
@@ -144,13 +212,28 @@ export default function ResetPasswordForm() {
         },
       });
       const data = await response.json();
-      router.push(getPassword);
-
+      setIsLoading(false);
+      if (debug) {
+        console.log('DATA ===> ');
+        console.log(data);
+      }
+      if ( !data ) {
+        throw new Error ("E-RESET-PASSWORD")
+      } else {
+        if ( data.statusCode !== 200 ) {
+          throw new Error("E-RESET-PASSWORD");
+        }
+      }
+      setPasswordResetDone(true);
+      console.log("passwordReset "+ passwordReset + " error "+error+ " isloading "+isLoading);
+      //return;
     } catch (error) {
       console.log(error);
-      router.push(getPassword);
+      setError(true);
+      setPasswordResetError(true);
     }
   };
+
   const inputClass =
     'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
   const errorClass =
@@ -165,34 +248,34 @@ export default function ResetPasswordForm() {
           alt="Workflow"
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {fmt({id: 'forgotPassword'})}
+          {fmt({id: 'resetPasswordTitle'})}
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form
             className="space-y-6"
-            onSubmit={processForgotPasswordHandler}
+            onSubmit={processResetPasswordHandler}
           >
             <div>
               <label
-                htmlFor="email"
+                htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                {fmt({id: 'emailAddress'})}
+                {fmt({id: 'newPassword'})}
               </label>
               <div className="mt-1">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
                   required
-                  onChange={emailChangeHandler}
-                  onBlur={validateEmailHandler}
-                  value={enteredEmail}
+                  onChange={passwordChangeHandler}
+                  onBlur={validatePasswordHandler}
+                  value={enteredPassword}
                   className={`${
-                    emailIsValid === false && emailBlur === true
+                    passwordIsValid === false && passwordBlur === true
                       ? errorClass
                       : inputClass
                   }`}
@@ -201,20 +284,64 @@ export default function ResetPasswordForm() {
             </div>
 
             <div>
+              <label
+                htmlFor="password2"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {fmt({id: 'confirmPassword'})}
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password2"
+                  name="password2"
+                  type="password"
+                  autoComplete="current-password2"
+                  required
+                  onChange={passwordChangeHandler2}
+                  onBlur={validatePasswordHandler2}
+                  value={enteredPassword2}
+                  className={`${
+                    passwordIsValid2 === false && passwordBlur2 === true
+                      ? errorClass
+                      : inputClass
+                  }`}
+                />
+              </div>
+            </div>            
+
+            <div>
               <button
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                {fmt({id: 'sendForgotPassword'})}
+                {fmt({id: 'saveNewPassword'})}
               </button>
             </div>
-          </form>
 
-          {emailSent && (
+          </form>
+          {formIsValid === true && passwordsMatch === false && passwordReset === false && (
+            <ErrorModal
+            title={fmt({id: 'passwordMatchErrorTitle'})}
+            buttonText={fmt({id: 'reenterPassword'})}
+            message={fmt({id: 'passwordMatchErrorMessage'})}
+            closeModal={closeModalHandler}
+          />
+          )}
+          {passwordResetError === true && (
+            <ErrorModal
+            title={fmt({id: 'resetPasswordErrorTitle'})}
+            buttonText={fmt({id: 'reenterPassword'})}
+            message={fmt({id: 'resetPasswordErrorMessage'})}
+            closeModal={closeModalHandler}
+          />
+          ) 
+          }
+
+          {passwordResetDone === true &&  (
             <AppModal
-              title={fmt({id: 'resetPasswordSent'})}
+              title={fmt({id: 'passwordChanged'})}
               buttonText={fmt({id: 'gobackToSignin'})}
-              message={fmt({id: 'forgotPasswordSent'})+ enteredEmail + fmt({id: 'forgotPasswordSent2'})}
+              message={fmt({id: 'passwordChangedMessage'})}
               closeModal={closeErrorHandler}
             />
           )}

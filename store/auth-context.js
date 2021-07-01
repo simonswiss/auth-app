@@ -13,6 +13,7 @@ const AuthContext = React.createContext({
   appName: "",
   redirectUrl: "",
   asPath: "",
+  oobCode: "",
   userData: new UserData(),
   login: (token, expirationTime, displayName) => {},
   logout: () => {},

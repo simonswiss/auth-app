@@ -131,7 +131,7 @@ export default function AuthForm() {
   const passwordChangeHandler = (event: any) => {
     setError(false);
     setFormIsValid(
-      event.target.value.includes('@') && event.target.value.trim().length > 7
+      enteredEmail.includes('@') && event.target.value.trim().length > 7
     );
     if (event.target.value.trim().length > 7) {
       setPasswordIsValid(true);
@@ -150,7 +150,7 @@ export default function AuthForm() {
   //===================================================
 
   //
-  // Validate eMail
+  // Validate Name
   //
   const validateNameHandler = () => {
     if (enteredName && enteredName.trim().length > 0) {

@@ -18,12 +18,12 @@ const SIGNUP: string = ":signUp?key=";
 const VERIFY_EMAIL: string = ":sendOobCode?key=";
 const CONFIRM_EMAIL: string = ":update?key="
 const SEND_PASSWORD_RESET: string = ":sendOobCode?key=";
-const CONFIRM_PASSWORD_RESET: string = ":resetPassword?key";
+const CONFIRM_PASSWORD_RESET: string = ":resetPassword?key=";
 const UPDATE_PROFILE: string = ":update?key=";
 
 const KEY: string = "AIzaSyB-xvYJGdr3lk0L4GEncNXvsx_1qcAZ6YA";
 
-const debug: boolean = false;
+const debug: boolean = true;
 
 //============================================================
 // call Id Service (Google Firebase in this example)
