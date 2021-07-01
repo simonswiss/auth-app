@@ -2,12 +2,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { RequestData } from "../../models/RequestData";
 import { ResponseStatus } from "../../models/ResponseStatus";
-import { SendVerifyEmail } from "./hello";
+import { ConfirmEmail } from "./hello";
 
 const debug: boolean = false;
 
 //============================================================
-// POST /api/resendEmail
+// POST /api/verifyEmail
 //
 async function handler(
   req: NextApiRequest,
@@ -15,23 +15,21 @@ async function handler(
 ) {
   let status = new ResponseStatus();
   if (debug) {
-    console.log("RESEND EMAIL");
+    console.log("VERIFY EMAIL");
     console.log(req.body);
   }
 
   let requestData = new RequestData();
-  requestData.idToken = req.body.idToken;
-  requestData.returnSecureToken = true;
-  requestData.requestType = "VERIFY_EMAIL";
+  requestData.oobCode = req.body.oobCode;
 
   try {
     //
     // Send verification email
     //
     if (debug) {
-      console.log("SEND VERFIFY EMAIL");
+      console.log("VERFIFY EMAIL");
     }
-    let verifyEmailStatus = await SendVerifyEmail(requestData);
+    let verifyEmailStatus = await ConfirmEmail(requestData);
     if (debug) {
       console.log("VERIFY EMAIL STATUS");
       console.log(verifyEmailStatus);
@@ -40,7 +38,12 @@ async function handler(
     // Check for error
     //
     if (!verifyEmailStatus) {
-      throw new Error("E-SEND-EMAIL-FAILED");
+      throw new Error("E-VERIFY-EMAIL-FAILED");
+    } else {
+      if ( verifyEmailStatus.statusCode === 500 ) {
+        console.log("Error code: " + verifyEmailStatus);
+        throw new Error("E-VERIFY-EMAIL-FAILED");
+      }
     }
     status.message = "SUCCESS";
     status.statusCode = 200;
@@ -50,7 +53,7 @@ async function handler(
     }
     res.status(200).json(status);
   } catch (error) {
-    console.log("ERROR (signup)");
+    console.log("ERROR (verifyEmail)");
     console.log(error);
     status.message = error.message;
     status.statusCode = 500;

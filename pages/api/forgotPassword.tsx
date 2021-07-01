@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { RequestData } from "../../models/RequestData";
 import { ResponseStatus } from "../../models/ResponseStatus";
-import { sendPasswordReset } from "./hello";
+import { SendPasswordReset } from "./hello";
 
 const debug: boolean = false;
 
@@ -29,7 +29,7 @@ async function handler(
     if (debug) {
       console.log("SEND FOR GOTPASSWORD  EMAIL");
     }
-    let forgotPasswordStatus = await sendPasswordReset(requestData);
+    let forgotPasswordStatus = await SendPasswordReset(requestData);
     if (debug) {
       console.log("FORGOT PASSWORD STATUS");
       console.log(forgotPasswordStatus);

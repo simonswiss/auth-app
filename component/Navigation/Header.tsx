@@ -28,7 +28,7 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
-  let asPath = router.asPath;
+  let pathname = router.pathname;
 
   const userStatus = GetUserStatus();
   if (userStatus) {
@@ -56,13 +56,18 @@ export default function Header() {
     'inline-block bg-white py-2 px-4 border border-transparent rounded-md text-base font-medium text-indigo-600 hover:bg-indigo-50';
   const regularClass =
     'inline-block bg-indigo-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75';
-    let signUpClass = boldClass;
+    let signUpClass = regularClass;
     let signInClass = regularClass;
     const signIn = router.query.singIn;
-    if ( asPath === "/auth" && signIn && signIn === 'false') {
+    if ( pathname === "/auth" && signIn && signIn === 'false') {
+      signUpClass = boldClass;
+      signInClass = regularClass;
+    }
+    if ( pathname === "/auth" && signIn && signIn === 'true') {
       signUpClass = regularClass;
       signInClass = boldClass;
     }
+
   return (
     <header className="bg-indigo-600">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">

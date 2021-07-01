@@ -48,5 +48,9 @@
   "gobackToSignin": "Go back to sign in",
   "forgotPasswordSent": "An email to reset you password was sent to ",
   "forgotPasswordSent2": ", provided you signed up using this email address.",
-  "resetPasswordSent": "Reset password email sent."
+  "resetPasswordSent": "Reset password email sent.",
+  "verifyEmailErrorTitle": "Try verifying your email again",
+  "verifyEmailErrorMessage": "Your request to verify your email has expired or the link has already been used.",
+  "verifyEmailTitle": "Your email has been verified",
+  "verifyEmailMessage": "You can now sign in with your new account."
 }

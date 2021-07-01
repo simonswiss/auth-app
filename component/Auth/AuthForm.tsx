@@ -346,6 +346,7 @@ export default function AuthForm() {
 
   const closeErrorHandler = () => {
     console.log('CLOSE ERROR HANDLER');
+    console.log(router);
     let redirectPath: string = '';
     if (authContext.asPath) {
       redirectPath = authContext.asPath;
@@ -360,6 +361,7 @@ export default function AuthForm() {
     setForgotPassword(false);
     setErrorMessage('');
     if (redirectPath && isLogin) {
+      console.log(redirectPath);
       router.push(redirectPath);
     }
   };

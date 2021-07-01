@@ -218,7 +218,7 @@ export async function SendVerifyEmail(requestData: RequestData) {
 //============================================================
 // Send password reset user
 //
-export async function sendPasswordReset(requestData: RequestData) {
+export async function SendPasswordReset(requestData: RequestData) {
   let status = new ResponseStatus();
   if (debug) {
     console.log("SEND PASSWORD RESET");
@@ -253,7 +253,7 @@ export async function sendPasswordReset(requestData: RequestData) {
 //============================================================
 // Confirm password reset user
 //
-export async function confirmPasswordReset(requestData: RequestData) {
+export async function ConfirmPasswordReset(requestData: RequestData) {
   let status = new ResponseStatus();
   if (debug) {
     console.log("CONFIRM PASSWORD USER");
@@ -288,7 +288,7 @@ export async function confirmPasswordReset(requestData: RequestData) {
 //============================================================
 // Update user profile
 //
-export async function updateUserProfile(requestData: RequestData) {
+export async function UpdateUserProfile(requestData: RequestData) {
   let status = new ResponseStatus();
   if (debug) {
     console.log("UPDATE USER PROFILE");
@@ -326,7 +326,7 @@ export async function updateUserProfile(requestData: RequestData) {
 //============================================================
 // Confirm email
 //
-export async function confirmEmail(requestData: RequestData) {
+export async function ConfirmEmail(requestData: RequestData) {
   let status = new ResponseStatus();
   if (debug) {
     console.log("CONFIRM EMAIL");
