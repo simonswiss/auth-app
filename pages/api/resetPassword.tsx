@@ -4,7 +4,7 @@ import { RequestData } from "../../models/RequestData";
 import { ResponseStatus } from "../../models/ResponseStatus";
 import { ConfirmPasswordReset } from "./hello";
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 //============================================================
 // POST /api/resetPassword

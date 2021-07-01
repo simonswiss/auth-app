@@ -23,7 +23,7 @@ const UPDATE_PROFILE: string = ":update?key=";
 
 const KEY: string = "AIzaSyB-xvYJGdr3lk0L4GEncNXvsx_1qcAZ6YA";
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 //============================================================
 // call Id Service (Google Firebase in this example)

@@ -43,6 +43,9 @@ http://localhost:3000/en/forgotpassword?app_id=abc&app_secret=abc&redirect_url=h
 Confirm Email (3rd party call not yet supported)
 ```
 http://localhost:3000/auth/action/verifyemail?oobCode=m6INkV86ZU6ofEM9uVrUTQBVljh8AnLMah3_l_vhPHUAAAF6Yn5FUw&lang=en 
+
+http://localhost:3000/auth/action/verifyemail?oobCode=m6INkV86ZU6ofEM9uVrUTQBVljh8AnLMah3_l_vhPHUAAAF6Yn5FUw&lang=en&app_id=digiapp&app_secret=12345&redirect_url=https://developer-playground.readme.io&app_name=app%20name
+
 ```
 
 Reset Password
