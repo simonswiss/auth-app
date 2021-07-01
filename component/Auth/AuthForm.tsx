@@ -354,6 +354,8 @@ export default function AuthForm() {
       setEnteredName('');
       setEnteredEmail('');
       setEnteredPassword('');
+      router.push(auth+"?singIn=false");
+
     }
     setUserRegistered(false);
     setError(false);

@@ -1,130 +1,95 @@
 import {useRouter} from 'next/router';
 import {useState, useRef, useContext, useEffect} from 'react';
 import {useIntl} from 'react-intl';
+import AuthContext from '../../store/auth-context';
 import ErrorModal from '../UI/ErrorModal';
 import AppModal  from '../UI/AppModal';
 
-const debug: boolean = true;
+const debug: boolean = false;
 
-export default function VerifyEmailForm() {
+
+export default function VerifyEmailForm( props: any) {
   const router = useRouter();
-  const loc = router.locale;
+  let loc = props.lang;
+  if ( !loc ) {
+    loc = router.locale;
+  }
   const home = '/' + loc;
   const auth = home + '/auth';
 
-  const { oobCode, lang } = router.query;
   const [ verifyEmail, setVerifyEmail] = useState<boolean>(false);
   const [ emailSent, setEmailSent] = useState<boolean>(false);
   const [emailError, setEmailError ] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const {formatMessage: fmt} = useIntl();
 
-
   useEffect(() => {
-    const verifyEmailHandler = async (oobCode: any) => {
+        if ( debug ){
+          console.log("Verify Email Form")
+          console.log("=================")
+          console.log("oobCode: "+props.oobCode)
+          console.log(router.asPath);
+      }
 
-        console.log("VERIFYEMAIL");
-        let url = '/api/verifyEmail';
-        // emailError = false;
-        try {
-          const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-              oobCode: oobCode,
-              requestMethod: 'POST',
-            }),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          const data = await response.json();
-          if ( debug ) {
-              console.log("DATA")
-              console.log(data);
-          }
-          if ( !data || data.statusCode !== 200 ) {
-              throw new Error ("E-INVALID-RESPONSE")
-          }
-          console.log("1. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-    
-        } catch (error) {
+      if ( props.oobCode ) {
+
+        setVerifyEmail(true);
+        setIsLoading(true);
+
+        const verifyEmailHandler = async () => {
+
+          let url = '/api/verifyEmail';            
+            const response = await fetch(url, {
+              method: 'POST',
+              body: JSON.stringify({
+                oobCode: props.oobCode,
+                requestMethod: 'POST',
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+            const data = await response.json();
+            if ( debug ) {
+                console.log("DATA")
+                console.log(data);
+            }
+            if ( !data || data.statusCode !== 200 ) {
+                throw new Error ("E-INVALID-RESPONSE")
+            }
+          setEmailSent(true);
+          setIsLoading(false)
+        };    
+
+        verifyEmailHandler().catch((error) => {
           console.log(error);
           setEmailError(true);
-          console.log("2. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-        }
-        console.log("3. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-      };
-
-      verifyEmailHandler(oobCode).catch((error) => {
-        console.log(error);
-        setEmailError(true);
-        // setIsLoading(false)
-        console.log("2. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-        // setIsLoading(false);
-        // setHttpError(error.message);
-      });
-
-  }, []);
-
-
-  const closeErrorHandler = () => {
-    console.log('CLOSE ERROR HANDLER');
-    if ( emailError ) {
-        router.push(auth+"?singIn=true&mode=verifyEmail"+"&status="+emailError);
-        } else {
-            router.push(auth+"?singIn=true", `${auth}`)
-        }
-      };
-
-      /*
-  //===================================================
-  //   V E R I F Y   E M A I L
-  //===================================================
-  const verifyEmailHandler = async (oobCode: any) => {
-
-    console.log("VERIFYEMAIL");
-    let url = '/api/verifyEmail';
-    // emailError = false;
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-          oobCode: oobCode,
-          requestMethod: 'POST',
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      if ( debug ) {
-          console.log("DATA")
-          console.log(data);
+          setIsLoading(false)
+        });
       }
-      if ( !data || data.statusCode !== 200 ) {
-          // setEmailError(true);
-          // emailError = true;
-          throw new Error ("E-INVALID-RESPONSE")
-      }
-      console.log("1. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
+    }, [props.oobCode]);
 
-    } catch (error) {
-      console.log(error);
-      emailError = true;
-      // setEmailError(true);
-      console.log("2. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-    }
-    console.log("3. eMail Error: "+emailError+ " emailSent: "+ emailSent+ " verifyEmail: " + verifyEmail)
-  };
-  */
+  if (isLoading) {
+    return (
+      <section>
+        <p>Loading...</p>
+      </section>
+    );
+  }
 
   //===================================================
   //   R E S E T    P A S S W O R D 
   //===================================================
   const submitHandler = async (event: any) => {
-    event.preventDefault();
+    //event.preventDefault();
+    router.push(auth+"?singIn=true");
   }
-
   
+  const inputClass =
+  'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
+const errorClass =
+  'appearance-none block w-full px-3 py-2 border border-red-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
 
   return (
     <div>
@@ -136,22 +101,24 @@ export default function VerifyEmailForm() {
             method="POST"
             onSubmit={submitHandler}
           >
-          {verifyEmail === true && emailError === true && (
-            <ErrorModal
-              title={fmt({id: 'verifyEmailErrorTitle'})}
-              buttonText={fmt({id: 'gobackToSignin'})}
-              message={fmt({id: 'verifyEmailErrorMessage'})}
-              closeModal={closeErrorHandler}
-            />
-          )}
-          {verifyEmail === true && emailError === false && (
+              
+          {verifyEmail === true && emailError === false  && isLoading === false && emailSent === true && (
             <AppModal
             title={fmt({id: 'verifyEmailTitle'})}
             buttonText={fmt({id: 'gobackToSignin'})}
             message={fmt({id: 'verifyEmailMessage'})}
-            closeModal={closeErrorHandler}
+            closeModal={submitHandler}
             cancelButton={false}
           />
+          )}
+
+          {verifyEmail === true && emailError === true  && isLoading === false && (
+            <ErrorModal
+              title={fmt({id: 'verifyEmailErrorTitle'})}
+              buttonText={fmt({id: 'gobackToSignin'})}
+              message={fmt({id: 'verifyEmailErrorMessage'})}
+              closeModal={submitHandler}
+            />
           )}
           </form>
           </div>
