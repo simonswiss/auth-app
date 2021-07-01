@@ -6,7 +6,6 @@ import { CheckIcon } from '@heroicons/react/outline'
 
 export default function AppModal( props: any) {
   const [open, setOpen] = useState(true)
-  console.log(props);
 
   return (
     <Transition.Root show={open} as={Fragment}>

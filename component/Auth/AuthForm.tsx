@@ -316,9 +316,6 @@ export default function AuthForm() {
             redirectPath = authContext.asPath;
           }
         }
-        console.log('LOGIN SUCCESS');
-        console.log(redirectPath);
-        // redirectPath = authContext.asPath;
         router.replace(redirectPath);
       } else {
         setUserRegistered(true);
@@ -345,8 +342,10 @@ export default function AuthForm() {
   };
 
   const closeErrorHandler = () => {
-    console.log('CLOSE ERROR HANDLER');
-    console.log(router);
+    if (debug ) {
+      console.log('CLOSE ERROR HANDLER');
+      console.log(router);
+    }
     let redirectPath: string = '';
     if (authContext.asPath) {
       redirectPath = authContext.asPath;

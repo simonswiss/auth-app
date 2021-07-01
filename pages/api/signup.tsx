@@ -6,7 +6,7 @@ import TransformData from "../../models/TransfrormData";
 import { UserData } from "../../models/UserData";
 import { SignupUser, SendVerifyEmail } from "./hello";
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 //============================================================
 // POST /api/signup
