@@ -14,15 +14,14 @@ const navigation = [
   {name: 'Company', href: '#'},
 ];
 
+const debug: boolean = false;
+
 export default function Header() {
   const {formatMessage: fmt} = useIntl();
   const router = useRouter();
   const {locale, locales} = router;
   const home = '/' + locale;
   const auth = home + '/auth';
-  const signin = home + '/signin';
-  const signup = home + '/signup';
-  const dashboard = home + '/dashboard';
 
   const authContext = useContext(AuthContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,6 +37,11 @@ export default function Header() {
     authContext.isLoggedIn = true;
     authContext.token = token;
     authContext.displayName = displayName;
+  }
+  if ( debug ) {
+    console.log("HEADER")
+    console.log(router.query)
+    console.log(authContext)
   }
 
   useEffect(() => {

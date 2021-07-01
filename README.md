@@ -27,3 +27,28 @@ yarn create next-app --example with-tailwindcss with-tailwindcss-app
 ```
 
 Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+
+## Examples
+
+Redirect when user logs in
+```
+http://localhost:3000/en/auth?app_id=abc&app_secret=abc&redirect_url=http://www.google.com&app_name=myApp
+```
+
+Forgot Password
+```
+http://localhost:3000/en/forgotpassword?app_id=abc&app_secret=abc&redirect_url=http://www.google.com&app_name=myApp
+```
+
+Confirm Email (3rd party call not yet supported)
+```
+http://localhost:3000/auth/action/verifyemail?oobCode=m6INkV86ZU6ofEM9uVrUTQBVljh8AnLMah3_l_vhPHUAAAF6Yn5FUw&lang=en 
+```
+
+Reset Password
+```
+http://localhost:3000/auth/action/resetpassword?oobCode=2NH34FQZT3d-QCqO_9KXgtj1H8j9W2_YM3fhLZ2K6i0AAAF6WUUo5A&lang=en
+
+http://localhost:3000/auth/action/resetpassword?oobCode=m6INkV86ZU6ofEM9uVrUTQBVljh8AnLMah3_l_vhPHUAAAF6Yn5FUw&lang=en&app_id=digiapp&app_secret=12345&redirect_url=https://developer-playground.readme.io&app_name=app%20name   
+```
+

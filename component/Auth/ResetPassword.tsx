@@ -4,9 +4,9 @@ import {useIntl} from 'react-intl';
 import AuthContext from '../../store/auth-context';
 import AppModal from '../UI/AppModal';
 
-const debug: boolean = false;
+const debug: boolean = true;
 
-export default function AuthForm() {
+export default function ResetPasswordForm() {
   const router = useRouter();
   const loc = router.locale;
   const home = '/' + loc;
@@ -17,11 +17,21 @@ export default function AuthForm() {
   const [emailSent, setEmailSent] = useState<boolean>(false);
 
   useEffect(() => {
-    const signIn = router.query.singIn;
-    if ( debug ) {
+    let oobCode : string | any;
+    let lang : string | any;
+    
+    lang = router.query.lang;
+    oobCode = router.query.oobCode
+    if ( debug ){
+      console.log("Reset Password Form")
+      console.log("===================")
+      console.log("oobCode: "+oobCode)
+      console.log("lang: "+lang)
       console.log(router)
       console.log(authContext);
     }
+  
+    const signIn = router.query.singIn;
     if (signIn && signIn === 'true') {
       setIsLogin(true);
     } else {
@@ -49,7 +59,11 @@ export default function AuthForm() {
       let email:string = router.query.enteredEmail.toString();
       setEnteredEmail(email);
     }  
-  }, []);
+    if ( debug ) {
+      console.log(router)
+      console.log(authContext);
+    }
+  }, [router.query]);
 
   if (authContext.isLoggedIn) {
     router.push(home);

@@ -1,9 +1,9 @@
 import {useRouter} from 'next/router';
-import {useState, useRef, useContext, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {useIntl} from 'react-intl';
-import AuthContext from '../../store/auth-context';
 import ErrorModal from '../UI/ErrorModal';
 import AppModal  from '../UI/AppModal';
+import Loading from '../UI/Loading';
 
 const debug: boolean = false;
 
@@ -70,14 +70,12 @@ export default function VerifyEmailForm( props: any) {
       }
     }, [props.oobCode]);
 
-  if (isLoading) {
-    return (
-      <section>
-        <p>Loading...</p>
-      </section>
-    );
-  }
-
+    if (isLoading) {
+      return (
+        <Loading />
+      );
+    }    
+  
   //===================================================
   //   R E S E T    P A S S W O R D 
   //===================================================
@@ -101,7 +99,7 @@ const errorClass =
             method="POST"
             onSubmit={submitHandler}
           >
-              
+
           {verifyEmail === true && emailError === false  && isLoading === false && emailSent === true && (
             <AppModal
             title={fmt({id: 'verifyEmailTitle'})}
