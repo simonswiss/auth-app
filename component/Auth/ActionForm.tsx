@@ -48,6 +48,7 @@ export default function AuthForm( props: any) {
           console.log(router.asPath);
       }
 
+      if ( mode !== "resetPassword") {
       if ( props.oobCode ) {
           setVerifyEmail(true);
           setIsLoading(true);
@@ -83,7 +84,8 @@ export default function AuthForm( props: any) {
             setIsLoading(false)
           });
         }
-  }, [props.oobCode]);
+      }
+  }, [props.oobCode, props.mode]);
 
   if (isLoading) {
     return (
@@ -93,7 +95,6 @@ export default function AuthForm( props: any) {
     );
   }
 
-
   //===================================================
   //   R E S E T    P A S S W O R D 
   //===================================================
@@ -102,6 +103,11 @@ export default function AuthForm( props: any) {
     router.push(auth+"?singIn=true");
   }
   
+  const inputClass =
+  'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
+const errorClass =
+  'appearance-none block w-full px-3 py-2 border border-red-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
+
   return (
     <div>
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -112,6 +118,28 @@ export default function AuthForm( props: any) {
             method="POST"
             onSubmit={submitHandler}
           >
+                        <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {fmt({id: 'emailAddress'})}
+              </label>
+              <div className="mt-1">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  // onChange={emailChangeHandler}
+                  // onBlur={validateEmailHandler}
+                  // value={enteredEmail}
+                  className={inputClass}
+                />
+              </div>
+            </div>
+
           {verifyEmail === true && emailError === false  && isLoading === false && emailSent === true && (
             <AppModal
             title={fmt({id: 'verifyEmailTitle'})}
