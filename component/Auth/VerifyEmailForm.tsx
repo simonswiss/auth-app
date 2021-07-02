@@ -7,7 +7,7 @@ import Loading from '../UI/Loading';
 import AuthContext from '../../store/auth-context';
 
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 
 export default function VerifyEmailForm( props: any) {

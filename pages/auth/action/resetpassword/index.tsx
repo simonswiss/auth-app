@@ -2,7 +2,7 @@ import {useRouter} from 'next/router';
 import ResetPasswordForm from '../../../../component/Auth/ResetPassword';
 
 
-const debug: boolean = true;
+const debug: boolean = false;
 const ResetPasswordPage = () => {
   const router = useRouter();
   let oobCode : string | any;
