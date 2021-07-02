@@ -1,5 +1,5 @@
 import 'tailwindcss/tailwind.css'
-import type { AppProps } from "next/app";
+// import type { AppProps } from "next/app";
 import Layout from "../component/Navigation/Layout";
 import { useRouter } from "next/router";
 import { IntlProvider } from "react-intl";

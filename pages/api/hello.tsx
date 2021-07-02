@@ -3,12 +3,14 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { RequestData } from "../../models/RequestData";
 import { ResponseStatus } from "../../models/ResponseStatus";
 
+/*
 export default (req: NextApiRequest, res: NextApiResponse<ResponseStatus>) => {
   let status = new ResponseStatus();
   status.message = "Hello";
   status.statusCode = 200;
   res.status(200).json(status);
 };
+*/
 
 const URL: string = "https://identitytoolkit.googleapis.com/v1/accounts";
 

@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import { Fragment } from "react";
 import HomePage from "./home";
 
 import { AuthContextProvider } from "../store/auth-context";
