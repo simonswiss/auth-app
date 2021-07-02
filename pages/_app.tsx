@@ -1,43 +1,41 @@
-import 'tailwindcss/tailwind.css'
+import 'tailwindcss/tailwind.css';
 // import type { AppProps } from "next/app";
-import Layout from "../component/Navigation/Layout";
-import { useRouter } from "next/router";
-import { IntlProvider } from "react-intl";
+import Layout from '../component/Navigation/Layout';
+import {useRouter} from 'next/router';
+import {IntlProvider} from 'react-intl';
 
-import de from "../translations/de/de.json";
-import en from "../translations/en/en.json";
-import es from "../translations/es/es.json";
-import fr from "../translations/fr/fr.json";
-import it from "../translations/it/it.json";
-import pt from "../translations/pt/pt.json";
+import de from '../translations/de/de.json';
+import en from '../translations/en/en.json';
+import es from '../translations/es/es.json';
+import fr from '../translations/fr/fr.json';
+import it from '../translations/it/it.json';
+import pt from '../translations/pt/pt.json';
 
 const debug: boolean = true;
 
-
-function MyApp({ Component, pageProps }) {
-
+function MyApp({Component, pageProps}) {
   const router = useRouter();
   const loc: string | any = router.locale;
 
   let translationContent = {};
   switch (loc) {
-    case "de":
+    case 'de':
       translationContent = de;
       break;
 
-    case "es":
+    case 'es':
       translationContent = es;
       break;
 
-    case "fr":
+    case 'fr':
       translationContent = fr;
       break;
 
-    case "it":
+    case 'it':
       translationContent = it;
       break;
 
-    case "pt":
+    case 'pt':
       translationContent = pt;
       break;
 
@@ -56,4 +54,4 @@ function MyApp({ Component, pageProps }) {
   // <Component {...pageProps} />
 }
 
-export default MyApp
+export default MyApp;

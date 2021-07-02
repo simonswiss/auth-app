@@ -220,10 +220,8 @@ export default function AuthForm() {
   };
 
   if (isLoading) {
-    return (
-      <Loading />
-    );
-  } 
+    return <Loading />;
+  }
 
   //===================================================
   //   P R O C E S S    F O R M
@@ -351,7 +349,7 @@ export default function AuthForm() {
   };
 
   const closeErrorHandler = () => {
-    if (debug ) {
+    if (debug) {
       console.log('CLOSE ERROR HANDLER');
       console.log(router);
     }
@@ -363,11 +361,11 @@ export default function AuthForm() {
       setEnteredName('');
       setEnteredEmail('');
       setEnteredPassword('');
-      router.push(auth+"?singIn=false");
+      router.push(auth + '?singIn=false');
     }
     setUserRegistered(false);
-    if ( error  && isLogin) {
-      redirectPath = auth+"?singIn=true";
+    if (error && isLogin) {
+      redirectPath = auth + '?singIn=true';
     }
     setError(false);
     setForgotPassword(false);
@@ -552,7 +550,7 @@ export default function AuthForm() {
                 </div>
                 <div className="text-sm">
                   <div className="font-medium text-indigo-600 hover:text-indigo-500">
-                    <Link 
+                    <Link
                       href={{
                         pathname: forgotpassword,
                         query: {

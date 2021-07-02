@@ -11,42 +11,41 @@ const debug: boolean = false;
 export default function ResetPasswordForm() {
   const router = useRouter();
   let loc = router.query.lang;
-  if ( !loc ) {
+  if (!loc) {
     loc = router.locale;
   }
   const home = '/' + loc;
   const auth = home + '/auth';
 
   let oobCode = router.query.oobCode;
-  if ( debug ) {
-    console.log("Reset Password Form 2")
-    console.log("=====================")
-    console.log("oobCodeVar: "+oobCode)
-    console.log("lang: "+loc)
-
+  if (debug) {
+    console.log('Reset Password Form 2');
+    console.log('=====================');
+    console.log('oobCodeVar: ' + oobCode);
+    console.log('lang: ' + loc);
   }
 
   const authContext = useContext(AuthContext);
-  
+
   // const [passwordReset, setPasswordReset] = useState<boolean>(false);
   const [passwordResetDone, setPasswordResetDone] = useState<boolean>(false);
   const [passwordResetError, setPasswordResetError] = useState<boolean>(false);
 
   useEffect(() => {
-    let oobCode : string | any;
-    oobCode = router.query.oobCode
-    if ( oobCode ) {
-      if ( authContext.oobCode === "") {
+    let oobCode: string | any;
+    oobCode = router.query.oobCode;
+    if (oobCode) {
+      if (authContext.oobCode === '') {
         authContext.oobCode = oobCode;
       }
     }
-    if ( debug ){
-      console.log("Reset Password Form")
-      console.log("===================")
-      console.log("oobCodeVar: "+oobCode)
+    if (debug) {
+      console.log('Reset Password Form');
+      console.log('===================');
+      console.log('oobCodeVar: ' + oobCode);
       console.log(authContext);
     }
-  
+
     let app_id: any = router.query.app_id;
     if (app_id) {
       authContext.appId = app_id;
@@ -65,8 +64,8 @@ export default function ResetPasswordForm() {
     if (app_name) {
       authContext.appName = app_name;
     }
-    if ( debug ) {
-      console.log(router)
+    if (debug) {
+      console.log(router);
       console.log(authContext);
     }
   }, [router.query]);
@@ -88,7 +87,6 @@ export default function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
   // const [error, setError] = useState<boolean>(false);
-  
 
   //===================================================
   //   V A L I D A T I O N
@@ -144,12 +142,11 @@ export default function ResetPasswordForm() {
     setPasswordBlur2(true);
   };
 
-
   const closeErrorHandler = () => {
     // setPasswordReset(false);
     setPasswordResetDone(false);
     setPasswordResetError(false);
-    router.push({ pathname: auth, query: { singIn: true } })
+    router.push({pathname: auth, query: {singIn: true}});
   };
 
   const closeModalHandler = () => {
@@ -158,13 +155,9 @@ export default function ResetPasswordForm() {
     setPasswordsMatch(true);
   };
 
-
   if (isLoading) {
-    return (
-      <Loading />
-    );
-  }    
-
+    return <Loading />;
+  }
 
   //===================================================
   //   R E S E T   P A S S W O R D
@@ -172,8 +165,8 @@ export default function ResetPasswordForm() {
   const processResetPasswordHandler = async (event: any) => {
     event.preventDefault();
 
-    if ( enteredPassword !== enteredPassword2 ) {
-      setPasswordsMatch(false)
+    if (enteredPassword !== enteredPassword2) {
+      setPasswordsMatch(false);
       return;
     }
     setPasswordsMatch(true);
@@ -185,7 +178,7 @@ export default function ResetPasswordForm() {
     // setError(false);
     let url = '/api/resetPassword';
     try {
-      console.log("entered password "+enteredPassword)
+      console.log('entered password ' + enteredPassword);
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
@@ -203,11 +196,11 @@ export default function ResetPasswordForm() {
         console.log('DATA ===> ');
         console.log(data);
       }
-      if ( !data ) {
-        throw new Error ("E-RESET-PASSWORD")
+      if (!data) {
+        throw new Error('E-RESET-PASSWORD');
       } else {
-        if ( data.statusCode !== 200 ) {
-          throw new Error("E-RESET-PASSWORD");
+        if (data.statusCode !== 200) {
+          throw new Error('E-RESET-PASSWORD');
         }
       }
       setPasswordResetDone(true);
@@ -222,7 +215,7 @@ export default function ResetPasswordForm() {
     'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
   const errorClass =
     'appearance-none block w-full px-3 py-2 border border-red-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
-   
+
   return (
     <div className="min-h-10  bg-gray-50 flex flex-col justify-center py-12  sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -237,10 +230,7 @@ export default function ResetPasswordForm() {
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form
-            className="space-y-6"
-            onSubmit={processResetPasswordHandler}
-          >
+          <form className="space-y-6" onSubmit={processResetPasswordHandler}>
             <div>
               <label
                 htmlFor="password"
@@ -291,7 +281,7 @@ export default function ResetPasswordForm() {
                   }`}
                 />
               </div>
-            </div>            
+            </div>
 
             <div>
               <button
@@ -301,27 +291,27 @@ export default function ResetPasswordForm() {
                 {fmt({id: 'saveNewPassword'})}
               </button>
             </div>
-
           </form>
-          {passwordsMatch === false && passwordIsValid === true && passwordIsValid2 === true && (
-            <ErrorModal
-            title={fmt({id: 'passwordMatchErrorTitle'})}
-            buttonText={fmt({id: 'reenterPassword'})}
-            message={fmt({id: 'passwordMatchErrorMessage'})}
-            closeModal={closeModalHandler}
-          />
-          )}
+          {passwordsMatch === false &&
+            passwordIsValid === true &&
+            passwordIsValid2 === true && (
+              <ErrorModal
+                title={fmt({id: 'passwordMatchErrorTitle'})}
+                buttonText={fmt({id: 'reenterPassword'})}
+                message={fmt({id: 'passwordMatchErrorMessage'})}
+                closeModal={closeModalHandler}
+              />
+            )}
           {passwordResetError === true && (
             <ErrorModal
-            title={fmt({id: 'resetPasswordErrorTitle'})}
-            buttonText={fmt({id: 'reenterPassword'})}
-            message={fmt({id: 'resetPasswordErrorMessage'})}
-            closeModal={closeModalHandler}
-          />
-          ) 
-          }
+              title={fmt({id: 'resetPasswordErrorTitle'})}
+              buttonText={fmt({id: 'reenterPassword'})}
+              message={fmt({id: 'resetPasswordErrorMessage'})}
+              closeModal={closeModalHandler}
+            />
+          )}
 
-          {passwordResetDone === true &&  (
+          {passwordResetDone === true && (
             <AppModal
               title={fmt({id: 'passwordChanged'})}
               buttonText={fmt({id: 'gobackToSignin'})}

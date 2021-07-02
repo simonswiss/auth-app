@@ -1,12 +1,12 @@
-import Head from 'next/head'
-import HomePage from "./home";
+import Head from 'next/head';
+import HomePage from './home';
 
-import { AuthContextProvider } from "../store/auth-context";
+import {AuthContextProvider} from '../store/auth-context';
 
 export default function Home() {
   return (
     <div>
-      <AuthContextProvider >
+      <AuthContextProvider>
         <Head>
           <title>Awsome App</title>
           <meta name="description" content="Awesome App" />
@@ -16,5 +16,4 @@ export default function Home() {
       </AuthContextProvider>
     </div>
   );
-
 }

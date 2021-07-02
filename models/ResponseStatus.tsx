@@ -1,7 +1,7 @@
-import { UserData } from "./UserData";
+import {UserData} from './UserData';
 
 export class ResponseStatus {
   statusCode: number = 0;
-  message: string = "";
+  message: string = '';
   userData: UserData = new UserData();
 }

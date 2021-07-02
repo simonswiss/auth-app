@@ -1,4 +1,4 @@
-import { UserData } from "./UserData";
+import {UserData} from './UserData';
 
 const TransformData = (data: any) => {
   let userData = new UserData();

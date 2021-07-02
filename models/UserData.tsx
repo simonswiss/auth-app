@@ -1,13 +1,13 @@
 export class UserData {
-  idToken: string = "";
-  email: string = "";
-  refereshToken: string = "";
+  idToken: string = '';
+  email: string = '';
+  refereshToken: string = '';
   expiresIn: number = 0;
-  localId: string = "";
+  localId: string = '';
   registered: boolean = false;
-  displayName: string = "";
-  photoUrl: string = "";
-  deletedAttribute: string = "";
+  displayName: string = '';
+  photoUrl: string = '';
+  deletedAttribute: string = '';
   emailVerified: boolean = false;
   providerUserInfo: any = null;
   passwordHash: string = '';
