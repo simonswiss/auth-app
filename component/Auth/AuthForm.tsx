@@ -9,6 +9,7 @@ import {UserData} from '../../models/UserData';
 import AppModal from '../UI/AppModal';
 import ErrorModal from '../UI/ErrorModal';
 import Loading from '../UI/Loading';
+import GetPairs from '../utilities/getPairs';
 
 const debug: boolean = false;
 
@@ -22,7 +23,14 @@ export default function AuthForm() {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    let signIn = router.query.signIn;
+    let query: any = null;
+    if ( router.isReady) {
+      query = router.query;
+    } else {
+      const url = new URL(router.asPath, 'http://dummy.com');
+      query = GetPairs(Array.from(url.searchParams.entries()));
+    }
+    let signIn = query.signIn;
     if ( !signIn ) {
       signIn = 'true';
     }
@@ -31,21 +39,21 @@ export default function AuthForm() {
     } else {
       setIsLogin(false);
     }
-    let app_id: any = router.query.app_id;
+    let app_id: any = query.app_id;
     if (app_id) {
       authContext.appId = app_id;
     }
-    let app_secret: any = router.query.app_secret;
+    let app_secret: any = query.app_secret;
     if (app_secret) {
       authContext.appSecret = app_secret;
     }
-    let redirect_url: any = router.query.redirect_url;
+    let redirect_url: any = query.redirect_url;
     if (redirect_url) {
       authContext.redirectUrl = redirect_url;
       let as_Path = router.asPath;
       authContext.asPath = as_Path;
     }
-    let app_name: any = router.query.app_name;
+    let app_name: any = query.app_name;
     if (app_name) {
       authContext.appName = app_name;
     }
@@ -94,6 +102,7 @@ export default function AuthForm() {
     setUserRegistered(false);
     setError(false);
   };
+
 
   //===================================================
   //   V A L I D A T I O N
@@ -374,6 +383,7 @@ export default function AuthForm() {
       router.push(redirectPath);
     }
   };
+
 
   //===================================================
   //   R E S E N D   E M A I L   C O N F I R M A T I O N

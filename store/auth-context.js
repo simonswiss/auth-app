@@ -140,7 +140,7 @@ export const LogoutUser = () => {
 //===================================================
 //   G E T   U S E R   S T A T U S - from   localStorage
 //===================================================
-export const GetUserStatus = () => {
+export const GetLocalUserStatus = () => {
   const tokenData = retrieveStoredToken();
 
   if (typeof window !== 'undefined') {

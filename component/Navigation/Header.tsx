@@ -5,10 +5,11 @@ import {Fragment, useContext, useEffect, useState} from 'react';
 
 import AuthContext from '../../store/auth-context';
 import {LogoutUser} from '../../store/auth-context';
-import {GetUserStatus} from '../../store/auth-context';
+import {GetLocalUserStatus} from '../../store/auth-context';
 
 import GuestForm from './GuestForm';
 import SideBarForm from '../AppUI/AppHome';
+import GetPairs from '../utilities/getPairs';
 
 const navigation = [
   {name: 'Solutions', href: '#'},
@@ -31,14 +32,16 @@ export default function Header() {
 
   let pathname = router.pathname;
 
-  const userStatus = GetUserStatus();
+  const userStatus = GetLocalUserStatus();
   if (userStatus) {
     const token: any = userStatus.token;
     const displayName: any = userStatus.token;
+
     const {duration} = userStatus;
     authContext.isLoggedIn = true;
     authContext.token = token;
     authContext.displayName = displayName;
+    authContext.authToken = userStatus.authToken;
   }
   if (debug) {
     console.log('HEADER');
@@ -81,14 +84,14 @@ export default function Header() {
 
   return (
     <Fragment>
-      {!isLoggedIn && (
+      {!isLoggedIn  &&  (
         <GuestForm
           isLoggedIn={isLoggedIn}
           signInClass={signInClass}
           signUpClass={signUpClass}
         />
       )}
-      {isLoggedIn && <SideBarForm />}
+      {isLoggedIn &&  <SideBarForm />}
     </Fragment>
   );
 }
