@@ -11,7 +11,7 @@ import fr from '../translations/fr/fr.json';
 import it from '../translations/it/it.json';
 import pt from '../translations/pt/pt.json';
 
-const debug: boolean = true;
+const debug: boolean = false;
 
 function MyApp({Component, pageProps}) {
   const router = useRouter();
@@ -45,6 +45,8 @@ function MyApp({Component, pageProps}) {
   }
 
   return (
+
+
     <IntlProvider locale={loc} messages={translationContent}>
       <Layout>
         <Component {...pageProps} />

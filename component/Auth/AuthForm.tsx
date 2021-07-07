@@ -22,7 +22,10 @@ export default function AuthForm() {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    const signIn = router.query.singIn;
+    let signIn = router.query.signIn;
+    if ( !signIn ) {
+      signIn = 'true';
+    }
     if (signIn && signIn === 'true') {
       setIsLogin(true);
     } else {
@@ -210,12 +213,14 @@ export default function AuthForm() {
     token: string,
     expirationTime: string,
     displayName: string,
-    userData: UserData
+    userData: UserData,
+    authToken: string,
   ) => {
-    LoginUser(token, expirationTime, displayName);
     authContext.isLoggedIn = true;
     authContext.token = token;
     authContext.userData = userData;
+    authContext.authToken = authToken;
+    LoginUser(token, expirationTime, displayName, userData, authToken);
     return;
   };
 
@@ -310,14 +315,12 @@ export default function AuthForm() {
           data.userData.idToken,
           expirationTime.toISOString(),
           data.userData.displayName,
-          data.userData
+          data.userData,
+          data.authToken,
         );
         let redirectPath = home;
         if (authContext.redirectUrl) {
-          // const jwt = require('jsonwebtoken').sign;
-          // const authToken = jwt.sign(data.token, 'VsajciHl4NQKZRXPZhDs');
-          redirectPath = authContext.redirectUrl;
-          //  authContext.redirectUrl + "/?auth_token=" + data.userData.idToken;
+          redirectPath = authContext.redirectUrl + "/?auth_token=" + authContext.authToken;
         } else {
           if (authContext.asPath) {
             redirectPath = authContext.asPath;
@@ -341,9 +344,6 @@ export default function AuthForm() {
       setIsLoading(false);
       console.log('ERROR ===>>>> ' + error);
       setError(true);
-      console.log(
-        error + ' ' + isLogin + ' ' + userRegistered + ' ' + errorMessage
-      );
       return;
     }
   };
@@ -371,7 +371,6 @@ export default function AuthForm() {
     setForgotPassword(false);
     setErrorMessage('');
     if (redirectPath && isLogin) {
-      console.log(redirectPath);
       router.push(redirectPath);
     }
   };

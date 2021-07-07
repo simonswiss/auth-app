@@ -45,12 +45,12 @@ const GuestForm = (props: any) => {
           {!props.isLoggedIn && (
             <div className="ml-10 space-x-4">
               <div className={props.signInClass}>
-                <Link href={{pathname: auth, query: {singIn: true}}} as={auth}>
+                <Link href={{pathname: auth, query: {signIn: true}}} as={auth}>
                   {fmt({id: 'signIn'})}
                 </Link>
               </div>
               <div className={props.signUpClass}>
-                <Link href={{pathname: auth, query: {singIn: false}}} as={auth}>
+                <Link href={{pathname: auth, query: {signIn: false}}} as={auth}>
                   {fmt({id: 'signUp'})}
                 </Link>
               </div>

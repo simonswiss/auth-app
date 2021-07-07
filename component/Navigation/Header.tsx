@@ -50,6 +50,8 @@ export default function Header() {
     setIsLoggedIn(authContext.isLoggedIn);
   }, [isLoggedIn, authContext.isLoggedIn]);
 
+  const [isLogin, setIsLogin] = useState(true);
+
   const logoutHandler = () => {
     LogoutUser();
     authContext.logout();
@@ -64,8 +66,11 @@ export default function Header() {
     'inline-block bg-indigo-500 py-2 px-4 border border-transparent rounded-md text-base font-medium text-white hover:bg-opacity-75';
   let signUpClass = regularClass;
   let signInClass = regularClass;
-  const signIn = router.query.singIn;
-  if (pathname === '/auth' && signIn && signIn === 'false') {
+  let signIn = router.query.signIn;
+  if ( pathname === '/auth' && !signIn ) {
+    signIn = 'true';
+  }
+;  if (pathname === '/auth' && signIn && signIn === 'false') {
     signUpClass = boldClass;
     signInClass = regularClass;
   }

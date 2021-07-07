@@ -7,6 +7,7 @@ import { UserData } from "../../models/UserData";
 import { GetUserData, LoginUser } from './hello';
 
 const debug: boolean = false;
+const jwtKey: string = '12345';
 
 
 //============================================================
@@ -70,6 +71,8 @@ async function handler(
     if ( !userData.emailVerified ) {
         throw new Error("E-EMAIL-NOT-VERIFIED");
     }
+    const jwt = require('njwt');
+    status.authToken = jwt.create(UserData, jwtKey).compact();
   
     status.message = "SUCCESS";
     status.statusCode = 200;

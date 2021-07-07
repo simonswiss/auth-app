@@ -14,6 +14,7 @@ const AuthContext = React.createContext({
   redirectUrl: '',
   asPath: '',
   oobCode: '',
+  authToken: '',
   userData: new UserData(),
   login: (token, expirationTime, displayName) => {},
   logout: () => {},
@@ -40,6 +41,7 @@ const retrieveStoredToken = () => {
       localStorage.removeItem('af-token');
       localStorage.removeItem('af-expirationTime');
       localStorage.removeItem('af-displayName');
+      localStorage.removeItem('af-authToken')
       return null;
     }
 
@@ -70,17 +72,19 @@ export const AuthContextProvider = (props) => {
     localStorage.removeItem('af-token');
     localStorage.removeItem('af-expirationTime');
     localStorage.removeItem('af-displayName');
+    localStorage.removeItem('af-authToken');
 
     if (logoutTimer) {
       clearTimeout(logoutTimer);
     }
   }, []);
 
-  const loginHandler = (token, expirationTime, displayName) => {
+  const loginHandler = (token, expirationTime, displayName, authToken) => {
     setToken(token);
     localStorage.setItem('af-token', token);
     localStorage.setItem('af-expirationTime', expirationTime);
     localStorage.setItem('af-displayName', displayName);
+    localStorage.setItem('af-authToken', authToken);
 
     const remainingTime = calculateRemainingTime(expirationTime);
 
@@ -112,10 +116,12 @@ export const AuthContextProvider = (props) => {
 //===================================================
 //   L O G I N   U S E R - store to localStorage
 //===================================================
-export const LoginUser = (token, expirationTime, displayName) => {
+export const LoginUser = (token, expirationTime, displayName, userData, authToken) => {
   localStorage.setItem('af-token', token);
   localStorage.setItem('af-expirationTime', expirationTime);
   localStorage.setItem('af-displayName', displayName);
+  localStorage.setItem('af-authToken', authToken);
+  localStorage.setItem('af-userData', userData);
   return;
 };
 
@@ -126,6 +132,8 @@ export const LogoutUser = () => {
   localStorage.removeItem('af-token');
   localStorage.removeItem('af-expirationTime');
   localStorage.removeItem('af-displayName');
+  localStorage.removeItem('af-authToken');
+  localStorage.removeItem('af-userData');
   return;
 };
 
@@ -139,6 +147,8 @@ export const GetUserStatus = () => {
     const storedToken = localStorage.getItem('af-token');
     const storedExpirationDate = localStorage.getItem('af-expirationTime');
     const storedDisplayName = localStorage.getItem('af-displayName');
+    const storedAuthToken = localStorage.getItem('af-authToken');
+    const storedUserData = localStorage.getItem('af-userData');
 
     const remainingTime = calculateRemainingTime(storedExpirationDate);
 
@@ -146,6 +156,8 @@ export const GetUserStatus = () => {
       localStorage.removeItem('af-token');
       localStorage.removeItem('af-expirationTime');
       localStorage.removeItem('af-displayName');
+      localStorage.removeItem('af-authToken');
+      localStorage.removeItem('af-userData');
       return null;
     }
 
@@ -153,6 +165,8 @@ export const GetUserStatus = () => {
       token: storedToken,
       duration: remainingTime,
       displayName: storedDisplayName,
+      userData: storedUserData,
+      authToken: storedAuthToken,
     };
   } else {
     return null;
