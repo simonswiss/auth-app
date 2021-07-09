@@ -75,5 +75,8 @@
   "contacts": "Contacts",
   "products": "Products",
   "transactions": "Transactions",
-  "reports": "Reports"
+  "reports": "Reports",
+
+  "search": "Search",
+  "viewNotifications": "View notifications"
 }
