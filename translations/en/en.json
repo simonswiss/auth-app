@@ -63,5 +63,17 @@
   "confirmPassword": "Confirm password",
   "passwordMatchErrorTitle": "Passwords do not match",
   "passwordMatchErrorMessage": "Please make sure that the passwords match.",
-  "reenterPassword": "Go back to reset your password"
+  "reenterPassword": "Go back to reset your password",
+  
+  "yourProfile": "Profile",
+  "settings": "Settings",
+  "switchAccount": "Switch Account",
+  "signOut": "Sign out",
+
+  "dashboard": "Dashboard",
+  "accounts": "Accounts",
+  "contacts": "Contacts",
+  "products": "Products",
+  "transactions": "Transactions",
+  "reports": "Reports"
 }
