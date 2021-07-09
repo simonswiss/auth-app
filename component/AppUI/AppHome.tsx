@@ -28,7 +28,7 @@ import {
   UsersIcon,
   XIcon,
 } from '@heroicons/react/outline';
-import TopbarForm from './Topbar';
+import TopbarNavForm from './TopbarNav/TopbarNav';
 
 const navigation = [
   {name: 'dashboard', href: '#', icon: HomeIcon, current: true},
@@ -45,7 +45,7 @@ function classNames(...classes) {
 
 export default function AppHomeForm() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchOn, setSearchOn] = useState(false);
+  const [searchOn, setSearchOn] = useState(true);
 
   const {formatMessage: fmt} = useIntl();
 
@@ -193,7 +193,7 @@ export default function AppHomeForm() {
             <MenuAlt2Icon className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="flex-1 flex justify-between px-4 md:px-0">
-            <TopbarForm searchOn={searchOn} />
+            <TopbarNavForm searchOn={searchOn} />
           </div>
         </div>
 
